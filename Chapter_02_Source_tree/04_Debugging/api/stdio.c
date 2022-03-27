@@ -24,6 +24,13 @@ int stdio_init()
 	return EXIT_SUCCESS;
 }
 
+// LAB1: dodati funkciju puts
+int puts(char* text){
+		int ret = printf("%s\n", text);
+		return ret;
+}
+
+
 /*! Formated output to console (lightweight version of 'printf') */
 int printf(char *format, ...)
 {

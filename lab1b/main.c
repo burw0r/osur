@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "plants/plants.h"
+#include "dodatak.h"
 
 
 int main(){
@@ -15,5 +16,9 @@ int main(){
   //                                     -->birds1-->birds2-->falcon-->owl
   //                                     -->fish-->salmon-->tuna
 
+
+
+//zadatak na labosu
+dodatak();
 
 }

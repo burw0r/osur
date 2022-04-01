@@ -4,7 +4,7 @@ export POCETNI_DIREKTORIJ
 
 include $(POCETNI_DIREKTORIJ)/config.ini
 
-OBJEKTI = main.o
+OBJEKTI = main.o dodatak.o
 MODULI = animals/mod-animals.o plants/mod-plants.o
 
 
@@ -13,6 +13,8 @@ executable: $(OBJEKTI) $(MODULI)
 
 
 main.o: main.c   #implicit
+
+dodatak.o: dodatak.c dodatak.h
 
 
 .PHONY: $(MODULI)

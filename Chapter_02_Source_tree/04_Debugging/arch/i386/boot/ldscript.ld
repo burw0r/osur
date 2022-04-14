@@ -2,31 +2,56 @@
 
 /* Its parsed as C before used in linking! */
 
+ROM_addr = 0x100000;
+RAM_addr = 0x200000;
+/*STOG=0x600000*/
+
 ENTRY(arch_startup)
 
 SECTIONS {
-	.code LOAD_ADDR :
-	{
-		kernel_code_addr = .;
 
-		/* instructions */
-		*?/boot/startup.asm.o ( .text* )
+	.code ROM_addr : AT(ROM_addr)
+ {
+	 /* kernel_code_addr = .; */
 
-		*( .text* )
+	 /* instructions */
+	 *?/boot/startup.asm.o ( .text* )
+		*?/boot/premjesti.o ( .text* )
 	}
-	.data :
-	{
-		kernel_data_addr = .;
+	size_c = SIZEOF(.code);
 
-		/* read only data (constants), initialized global variables */
-		* ( .rodata* .data* )
-	}
-	.bss :
-	{
-		*( .bss* COMMON* )
 
+	.instrukcije RAM_addr : AT(ROM_addr + size_c)
+	{
+	 *( .text* )
+  }
+
+	size_i = SIZEOF( .instrukcije );
+	xxxx = 0x10000;
+
+
+	.data RAM_addr + size_i : AT(ROM_addr + size_c + size_i)
+ {
+	 kernel_data_addr = .;
+	 * ( .rodata* .data* )
+ }
+	size_data = SIZEOF(.data);
+
+
+	.bss RAM_addr + size_i + size_data : AT(ROM_addr + size_c + size_i + size_data)
+ {
+	 *( .bss* COMMON* )
+
+	 . = ALIGN (4096);
+ }
+ size_bss = SIZEOF(.bss);
+
+	.stog_u_slici 0x600000 : AT(0x600000)
+	{
+		*( .stog )
 		. = ALIGN (4096);
 	}
+	size_stog = SIZEOF(.stog_u_slici);
 
 	/*
 	 * what with other sections generated with gcc (various versions)?
@@ -36,6 +61,8 @@ SECTIONS {
 	 * - but they will be put behind "kernel_end_addr" so its best to use
 	 *   multiboot loader (QEMU is that)
 	 */
+
+/DISCARD/ : { *(.eh_frame) }
 
 #ifndef DEBUG
 	/DISCARD/ : { *(*) }

@@ -21,24 +21,25 @@ SECTIONS {
 	size_c = SIZEOF(.code);
 
 
-	.instrukcije RAM_addr : AT(ROM_addr + size_c)
+	.instrukcije ROM_addr + size_c : AT(ROM_addr + size_c)  /*ostaje u ROMu, ne premjestati*/
 	{
 	 *( .text* )
+	 *( .rodata* )   /* LAB2 --> instrukcije i konstante ne premjestati*/
   }
 
 	size_i = SIZEOF( .instrukcije );
 	xxxx = 0x10000;
 
 
-	.data RAM_addr + size_i : AT(ROM_addr + size_c + size_i)
+	.data RAM_addr : AT(ROM_addr + size_c + size_i)
  {
 	 kernel_data_addr = .;
-	 * ( .rodata* .data* )
+	 * ( .data* )
  }
 	size_data = SIZEOF(.data);
 
 
-	.bss RAM_addr + size_i + size_data : AT(ROM_addr + size_c + size_i + size_data)
+	.bss RAM_addr + size_data : AT(ROM_addr + size_c + size_i + size_data)
  {
 	 *( .bss* COMMON* )
 

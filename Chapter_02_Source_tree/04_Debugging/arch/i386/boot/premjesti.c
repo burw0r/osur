@@ -9,7 +9,7 @@ void premjesti()
 	size_t copy_size;
 	copy_size = (size_t) &size_i + (size_t) &size_data + (size_t) &size_bss;
 
-	char* copy_from =  (char*) ((size_t) &ROM_addr + (size_t) &size_c);
+	char* copy_from =  (char*) ((size_t) &ROM_addr + (size_t) &size_c + (size_t) &size_i);
 	char* copy_to = (char *) &RAM_addr;
 
 	for(size_t i=0; i<copy_size; i++)

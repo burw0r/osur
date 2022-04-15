@@ -16,6 +16,8 @@ static int inc(int n)
 int x = 5;
 int y[100];
 
+const int konstanta = 1337;
+
 int debug()
 {
 	int a, b, c;
@@ -37,14 +39,17 @@ int debug()
 
 #if 1	/* compile with 'debug=yes' and without */
 	//LOG(WARN, "This is log entry with WARN relevance");
-	LOG ( INFO, "Address of 'a' is %x", &a );
-	LOG ( INFO, "Address of 'x' is %x", &x );
+
+
 	LOG ( INFO, "Address of 'y' is %x", y );
 	LOG ( INFO, "Address of 'debug' is %x", debug );
 	extern int xxxx;
 	LOG ( INFO, "Address of 'xxxx' is %x", xxxx );
-	LOG ( INFO, "Address of 'xxxx' is %x", &xxxx );
 
+	LOG ( INFO, "[+] addr instrukcija --> Address of 'xxxx' is %x", &xxxx );
+	LOG ( INFO, "[+] addr konstanta --> Address of 'konstanta' is %x", &konstanta );
+	LOG ( INFO, "[+] on stack --> Address of 'a' is %x", &a );
+	LOG ( INFO, "[+] in .data --> Address of 'x' is %x", &x );
 
 	//ASSERT_ERRNO_AND_RETURN(TRUE, EINVAL);
 

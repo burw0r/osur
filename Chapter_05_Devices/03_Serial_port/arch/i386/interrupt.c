@@ -8,6 +8,8 @@
 #include <lib/list.h>
 #include <kernel/memory.h>
 
+#define MIN_PRIO (0)
+
 /*! Interrupt controller device */
 extern arch_ic_t IC_DEV;
 static arch_ic_t *icdev = &IC_DEV;
@@ -152,6 +154,16 @@ void arch_interrupt_handler(int irq_num)
 						prvi->obrada_u_tijeku = 1;
 						arch_enable_interrupts();
 						prvi->handler.ihandler(irq_num, prvi->handler.device);
+
+						//--- nakon obrade smanjiti prioritet takvim zahtjevima za 1 -----
+						struct ihndlr* han =  list_get(&ihandlers[irq_num], FIRST);
+						while (han->list.next != NULL){
+							if((han->prio) > MIN_PRIO ){
+								printf("Smanjujem prioritet zahtjeva sa %d na %d. (MIN_PRIO = %d)\n", han->prio, (han->prio)-1, MIN_PRIO);
+								(han->prio)--;
+							}
+						}
+						//----------------------------------------------------------------
 						arch_disable_interrupts();
 						list_remove(&lista_zahtjeva, FIRST, NULL );
 						kfree(prvi);

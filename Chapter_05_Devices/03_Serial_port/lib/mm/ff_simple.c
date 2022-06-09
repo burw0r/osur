@@ -7,6 +7,8 @@
 #include ASSERT_H
 #endif
 
+int free_counter = 0;
+
 /*!
  * Initialize dynamic memory manager
  * \param mem_segm Memory pool start address
@@ -109,6 +111,7 @@ void *ffs_alloc(ffs_mpool_t *mpool, size_t size)
  */
 int ffs_free(ffs_mpool_t *mpool, void *chunk_to_be_freed)
 {
+	free_counter += 1;
 	ffs_hdr_t *chunk, *before, *after;
 
 	ASSERT(mpool && chunk_to_be_freed);
@@ -118,22 +121,27 @@ int ffs_free(ffs_mpool_t *mpool, void *chunk_to_be_freed)
 
 	MARK_FREE(chunk); /* mark it as free */
 
-	/* join with left? */
-	before = ((void *) chunk) - sizeof(size_t);
-	if (CHECK_FREE(before))
-	{
-		before = GET_HDR(before);
-		ffs_remove_chunk(mpool, before);
-		before->size += chunk->size; /* join */
-		chunk = before;
-	}
+		if (free_counter %5 ==0 ){
 
-	/* join with right? */
-	after = GET_AFTER(chunk);
-	if (CHECK_FREE(after))
-	{
-		ffs_remove_chunk(mpool, after);
-		chunk->size += after->size; /* join */
+		printf("[+] spajanje blokova\n");
+		/* join with left? */
+		before = ((void *) chunk) - sizeof(size_t);
+		if (CHECK_FREE(before))
+		{
+			before = GET_HDR(before);
+			ffs_remove_chunk(mpool, before);
+			before->size += chunk->size; /* join */
+			chunk = before;
+		}
+
+		/* join with right? */
+		after = GET_AFTER(chunk);
+		if (CHECK_FREE(after))
+		{
+			ffs_remove_chunk(mpool, after);
+			chunk->size += after->size; /* join */
+		}
+
 	}
 
 	/* insert chunk in free list */

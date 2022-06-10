@@ -280,6 +280,17 @@ int sys__open(char *pathname, int flags, mode_t mode, descriptor_t *desc)
 	SYS_EXIT(EXIT_SUCCESS, EXIT_SUCCESS);
 }
 
+
+//----------------------------------------------------------------------------
+//lab5 na labosu
+void sys__find(char* podniz, char* rezultat){
+	// printf("debug\n");
+	k_fs_find(podniz, rezultat);
+}
+
+
+
+
 int sys__close(descriptor_t *desc)
 {
 	kdevice_t *kdev;

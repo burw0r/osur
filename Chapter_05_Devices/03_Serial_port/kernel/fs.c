@@ -153,6 +153,19 @@ int k_fs_open_file(char *pathname, int flags, mode_t mode, descriptor_t *desc)
 	return 0;
 }
 
+
+void k_fs_find(char* podniz, char* rezultat)
+{
+	int i;
+	for (i = 0; i < ft->max_files; i++) {
+		if (strstr(ft->fd[i].node_name, podniz)) {
+			strcat(rezultat, ft->fd[i].node_name);
+		}
+	}
+
+}
+
+
 int k_fs_close_file(descriptor_t *desc)
 {
 	struct kfile_desc *fd = last_check;

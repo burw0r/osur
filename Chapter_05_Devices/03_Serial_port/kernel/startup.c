@@ -77,6 +77,18 @@ void k_startup()
 	int retval2 = write(fd2, "AAAA BBBBBCCC", 14);
 	kprintf("\tzapisao \"AAAA BBBBBCCC\" u test2, retval=%d\n", retval2);
 
+
+	//----------------------------------------------------
+	printf("[+] trazim podniz\n");
+	char* podniz = "test";
+	char rezultat[100];
+	int rv = find(podniz, rezultat);
+	printf("%d\n",rv);
+	printf("%s\n", rezultat);
+	//---------------------------------------------------
+	
+
+
 	retval = close(fd);
 	// kprintf("\tzatvaram file, retval=%d\n", retval);
 	retval2 = close(fd2);

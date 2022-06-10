@@ -58,6 +58,28 @@ int open(char *pathname, int flags, mode_t mode)
 	return i;
 }
 
+
+//----------------------------------------------------------------------------
+//lab5 na labosu
+int find(char *podniz, char *rezultat)
+{
+
+		sys__find(podniz, rezultat);
+
+		printf("\n\n\n");
+		printf("[+] %s\n", rezultat);
+		if(rezultat)
+			return 1;
+		return 0;
+
+}
+
+
+
+
+
+
+
 /*! Close an descriptor */
 int close(int fd)
 {

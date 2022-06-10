@@ -4,12 +4,14 @@
 #include "time.h"
 #include "device.h"
 #include "memory.h"
+#include "fs.h"
 #include <kernel/errno.h>
 #include <kernel/features.h>
 #include <arch/interrupt.h>
 #include <arch/processor.h>
 #include <api/stdio.h>
 #include <api/prog_info.h>
+#include <lib/string.h>
 
 char system_info[] = 	OS_NAME ": " NAME_MAJOR ":" NAME_MINOR ", "
 			"Version: " VERSION " (" ARCH ")";
@@ -55,10 +57,53 @@ void k_startup()
 
 	stdio_init(); /* initialize standard input & output devices */
 
+	k_fs_init("DISK", 512, 4096);
+
+	// ----------------------------------------------------------------------
+	printf("\n\n[#] testni program za lab4\n");
+
+
+	// ================ otvaranje ========================
+	int fd = open("file:test", O_CREAT | O_WRONLY, 0);
+	kprintf("\totvoren file \"test\",  fd=%d\n", fd);
+
+	int fd2 = open("file:test2", O_CREAT | O_WRONLY, 0);
+	kprintf("\totvoren file \"test2\", fd=%d\n", fd2);
+
+  // ================ pisanje ========================
+	int retval = write(fd, "neki tekst", 11);
+	kprintf("\tzapisao \"neki tekst\" u test, retval=%d\n", retval);
+
+	int retval2 = write(fd2, "AAAA BBBBBCCC", 14);
+	kprintf("\tzapisao \"AAAA BBBBBCCC\" u test2, retval=%d\n", retval2);
+
+	retval = close(fd);
+	// kprintf("\tzatvaram file, retval=%d\n", retval);
+	retval2 = close(fd2);
+	// kprintf("\tzatvaram file, retval=%d\n", retval2);
+
+
+	fd = open("file:test", O_RDONLY, 0);
+	fd2 = open("file:test2", O_RDONLY, 0);
+	char buff[11];
+	char buff2[11];
+	retval = read(fd, buff, 11);
+	kprintf("\tiz \"test\" procitao: %s, retval:%d\n", buff, retval);
+	retval2 = read(fd2, buff2, 14);
+	kprintf("\tiz \"test2\" procitao: %s, retval:%d\n", buff2, retval2);
+
+
+
+
+
+
+
+	// ----------------------------------------------------------------------
+
 	/* start desired program(s) */
-	hello_world();
-	keyboard();
-	timer();
+	//hello_world();
+	//keyboard();
+	//timer();
 	/* segm_fault(); */
 
 	kprintf("\nSystem halted!\n");
